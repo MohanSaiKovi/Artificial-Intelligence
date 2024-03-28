@@ -1,0 +1,61 @@
+def is_valid_coloring(graph, node, color, coloring):
+    for neighbor in graph[node]:
+        if neighbor in coloring and coloring[neighbor] == color:
+            return False
+    return True
+
+def map_coloring(graph, colors, coloring, node):
+    if node not in coloring:
+        for color in colors:
+            if is_valid_coloring(graph, node, color, coloring):
+                coloring[node] = color
+                next_node = None
+                for n in graph:
+                    if n not in coloring:
+                        next_node = n
+                        break
+                if next_node is None or map_coloring(graph, colors, coloring, next_node):
+                    return True
+                del coloring[node]
+        return False
+    else:
+        next_node = None
+        for n in graph:
+            if n not in coloring:
+                next_node = n
+                break
+        if next_node is None or map_coloring(graph, colors, coloring, next_node):
+            return True
+        return False
+
+def print_coloring(coloring):
+    for node, color in coloring.items():
+        print(f"{node}: {color}")
+
+def main():
+    # Input the graph (adjacency list)
+    graph = {}
+    while True:
+        node = input("Enter node (or 'done' to stop): ")
+        if node == 'done':
+            break
+        neighbors = input(f"Enter neighbors of {node} separated by spaces: ").split()
+        graph[node] = neighbors
+
+    # Input available colors
+    colors = input("Enter available colors separated by spaces: ").split()
+
+    # Initialize coloring dictionary
+    coloring = {}
+
+    # Input starting node
+    start_node = input("Enter starting node: ")
+
+    # Start coloring from the specified node
+    map_coloring(graph, colors, coloring, start_node)
+
+    # Print the coloring
+    print_coloring(coloring)
+
+if __name__ == "__main__":
+    main()
