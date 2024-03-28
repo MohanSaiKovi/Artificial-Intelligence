@@ -1,0 +1,36 @@
+def bfs(source, destination, graph):
+    visited = set()
+    queue = [(source, [source])]
+
+    while queue:
+        current, path = queue.pop(0)
+        visited.add(current)
+
+        if current == destination:
+            return path
+
+        for neighbor in graph.get(current, []):
+            if neighbor not in visited:
+                queue.append((neighbor, path + [neighbor]))
+
+    return None
+
+if __name__ == "__main__":
+    graph = {}
+
+    num_edges = int(input("Enter the number of edges: "))
+    print("Enter the edges (format: source destination):")
+    for _ in range(num_edges):
+        source, destination = input().split()
+        if source not in graph:
+            graph[source] = []
+        graph[source].append(destination)
+
+    source_vertex = input("Enter the source vertex: ")
+    destination_vertex = input("Enter the destination vertex: ")
+
+    path = bfs(source_vertex, destination_vertex, graph)
+    if path:
+        print("Path from", source_vertex, "to", destination_vertex, ":", ' -> '.join(path))
+    else:
+        print("No path found from", source_vertex, "to", destination_vertex)
